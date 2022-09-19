@@ -1,14 +1,18 @@
 import express from 'express';
+import passport from 'passport';
+import { Strategy } from 'passport-local';
+import bcrypt from 'bcrypt';
+import { connectDB } from './src/config/db.js';
+import { myMiddleware } from './src/middleware/defaultMiddleware.js';
+import { myPassport } from './src/middleware/passportMiddleware.js';
 
-// initialize app
 const app = express();
+connectDB();
 
 // middleware
+myMiddleware();
+myPassport();
 
 // routes
-app.get('/', (req, res) => {
-  res.send("<h1>Hello World</h1>")
-})
 
-// listen
-app.listen(3000)
+app.listen(3000);
