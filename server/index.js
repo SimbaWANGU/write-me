@@ -1,18 +1,40 @@
-import express from 'express';
-import passport from 'passport';
-import { Strategy } from 'passport-local';
-import bcrypt from 'bcrypt';
-import { connectDB } from './src/config/db.js';
-import { myMiddleware } from './src/middleware/defaultMiddleware.js';
-import { myPassport } from './src/middleware/passportMiddleware.js';
+require("dotenv").config();
+const express = require('express');
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const session = require('express-session')
+const passport = require('passport')
+const authRoutes = require('./src/routes/auth');
 
+// initialize app
 const app = express();
-connectDB();
 
 // middleware
-myMiddleware();
-myPassport();
+app.set('view engine', 'pug')
+app.set('views', './views')
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+
+try {
+  mongoose.connect(
+    process.env.MONGODB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+} catch (err) {
+  console.log(err)
+}
 
 // routes
+app.use('/', authRoutes)
 
-app.listen(3000);
+app.listen(5500)
