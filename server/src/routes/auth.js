@@ -40,7 +40,10 @@ router.post("/auth/login", (req, res) => {
       console.log(err)
     } else {
       passport.authenticate('local')(req, res, function() {
-        res.redirect('/')
+        res.json({
+          username: req.body.username,
+          welcome: 'You have access'
+        })
       })
     }
   })
