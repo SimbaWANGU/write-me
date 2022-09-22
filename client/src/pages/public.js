@@ -77,13 +77,16 @@ export default function BasicTabs() {
 
   const handlePostSubmit = (e) => {
     e.preventDefault()
-    console.log(postText)
+    console.log(postText) //post fetch method here
     setPostText('')
+    handleClosePostModal()
   }
 
   const handleBlogSubmit = (e) => {
     e.preventDefault()
-    console.log(blogText, blogStatus)
+    console.log(blogText, blogStatus) //post fetch method here
+    setBlogText('')
+    handleCloseBlogModal()
   }
 
   return (
