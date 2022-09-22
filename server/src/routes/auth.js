@@ -19,10 +19,14 @@ router.post("/auth/register", async (req, res) => {
     const registerUser = await User.register({username: req.body.username}, req.body.password)
     if(registerUser) {
       passport.authenticate('local')(req, res, function () {
-        res.redirect('/');
+        res.json({
+          lmao: 'You\'re not in'
+        })
       })
     } else {
-      res.redirect('/register')
+      res.json({
+        lmao: 'You\'re not in'
+      })
     }
   } catch (err) {
     res.send(err)
@@ -40,9 +44,12 @@ router.post("/auth/login", (req, res) => {
       console.log(err)
     } else {
       passport.authenticate('local')(req, res, function() {
+        console.log(req.session.passport.user)
         res.json({
           username: req.body.username,
-          welcome: 'You have access'
+          message: 'You have access',
+          status: 200,
+          session: req.session.passport.user
         })
       })
     }
@@ -52,24 +59,34 @@ router.post("/auth/login", (req, res) => {
 router.get("/auth/logout", (req, res) => {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('/login');
+    res.json({
+      lmao: 'You\'re not in'
+    })
   });
 })
 
 router.get('/', (req, res) => {
   if(req.isAuthenticated()) {
-    res.render('home')
+    res.json({
+      lmao: 'You\'re in'
+    })
   } else {
-    res.redirect('/login')
+    res.json({
+      lmao: 'lmao bro, try again'
+    })
   }
 })
 
 router.get('/login', (req, res) => {
-  res.render('login')
+  res.json({
+    lmao: 'You\'re not in'
+  })
 })
 
 router.get('/register', (req, res) => {
-  res.render('register')
+  res.json({
+    lmao: 'You\'re not in'
+  })
 })
 
 module.exports = router
