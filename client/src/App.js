@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import LoginRegister from "./pages/loginRegister";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from "./components/Navbar";
@@ -18,10 +19,32 @@ function Authorized() {
 }
 
 function App() {
-  const user = 1
+  const [user, setUser] = useState({})
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('write-me-user');
+    if (loggedInUser === null) {
+      setUser({})
+    } else {
+      setUser(JSON.parse(loggedInUser))
+    }
+  }, [message])
+
+  const updateMessage = (message) => {
+    setMessage(message)
+  }
+
   return (
     <>
-      {user === 1 ? <LoginRegister /> : <Authorized />}
+      {(Object.keys(user).length === 0) ? 
+        <LoginRegister 
+          updateMessage={updateMessage}
+        /> :
+        <Authorized
+          updateMessage={updateMessage}
+        />  
+    }
     </>
   );
 }

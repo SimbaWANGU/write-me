@@ -20,7 +20,10 @@ router.post("/auth/register", async (req, res) => {
     if(registerUser) {
       passport.authenticate('local')(req, res, function () {
         res.json({
-          lmao: 'You\'re not in'
+          username: req.body.username,
+          message: 'You have created an account',
+          status: 200,
+          session: req.session.passport.user
         })
       })
     } else {

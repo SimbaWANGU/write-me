@@ -39,7 +39,7 @@ function a11yProps(index) {
   };
 }
 
-function LoginRegister() {
+function LoginRegister({updateMessage}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -48,35 +48,37 @@ function LoginRegister() {
   };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
 
   const handleLoginSubmit = async(e) => {
     e.preventDefault()
-    try {
-      let res = await fetch('/auth/login', {
-        method: 'post',
-        headers: {
-          "Content-type": "application/x-www-form-urlencoded"
-        },
-        body: `username=${username}&password=${password}`
-      })
-        .then(res => res.json())
-        .then(data => console.log(data))
-      
-      if (res.status === 200) {
-        setUsername('')
-        setPassword('')
-        setMessage(res.message)
-      } else {
-        setMessage(res.message)
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    await fetch('/auth/login', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      body: `username=${username}&password=${password}`
+    })
+    .then(res => res.json())
+    .then((data) => {
+      localStorage.setItem('write-me-user', JSON.stringify(data))
+      updateMessage(data.message)
+    })
   }
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async(e) => {
     e.preventDefault()
+    await fetch('/auth/register', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      body: `username=${username}&password=${password}`
+    })
+    .then(res => res.json())
+    .then((data) => {
+      localStorage.setItem('write-me-user', JSON.stringify(data))
+      updateMessage(data.message)
+    })
   }
 
   return (
@@ -110,8 +112,8 @@ function LoginRegister() {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <div className='container'>
-        <h3>Create Account</h3>
+        <div className='container'>
+          <h3>Create Account</h3>
           <form onSubmit={handleRegisterSubmit} className="loginForm">
             <label>Username</label><br />
             <input
@@ -128,7 +130,6 @@ function LoginRegister() {
               onChange={(e) => setPassword(e.target.value)}  
             /><br />
             <input type="submit" value='Register' />
-            <p>{message}</p>
           </form>
         </div>
       </TabPanel>
