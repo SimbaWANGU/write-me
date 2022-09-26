@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
 const authRoutes = require('./src/routes/auth');
+const postRoutes = require('./src/routes/post');
+const blogRoutes = require('./src/routes/blog');
 
 // initialize app
 const app = express();
@@ -36,5 +38,7 @@ try {
 
 // routes
 app.use('/', authRoutes)
+app.use('/post', postRoutes)
+app.use('/blog', blogRoutes)
 
 app.listen(5500)
