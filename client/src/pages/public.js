@@ -80,6 +80,8 @@ export default function BasicTabs() {
   const handleCloseBlogModal = () => setBlogModal(false)
 
   const [postText, setPostText] = React.useState('')
+
+  const [blogTitle, setBlogTitle] = React.useState('')
   const [blogText, setBlogText] = React.useState('')
   const [blogStatus, setBlogStatus] = React.useState('public')
 
@@ -99,10 +101,19 @@ export default function BasicTabs() {
     handleClosePostModal()
   }
 
-  const handleBlogSubmit = (e) => {
+  const handleBlogSubmit = async (e) => {
     e.preventDefault()
-    console.log(blogText, blogStatus) //post fetch method here
+    await fetch('/blog/create', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      body: `title=${blogTitle}&text=${blogText}&author=${username}&status=${blogStatus}`
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
     setBlogText('')
+    setBlogTitle('')
     handleCloseBlogModal()
   }
 
@@ -156,8 +167,16 @@ export default function BasicTabs() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <form className='createPostandBlog' onSubmit={handleBlogSubmit}>
-            <label for='blogText'>What's on your mind?</label>
+          <form className='createPostandBlog' onSubmit={handleBlogSubmit}>
+            <label for='blogTitle'>Title</label>
+            <input 
+              type='text'
+              name='blogTitle' 
+              value={blogTitle}
+              onChange={(e) => setBlogTitle(e.target.value)}
+              required />
+            <br />
+            <label for='blogText'>Start Blog</label>
             <input 
               type='text'
               name='blogText' 
