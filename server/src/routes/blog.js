@@ -11,4 +11,10 @@ router.post('/create', (req, res) => {
   }
 })
 
+router.get('/get', (req, res) => {
+  if(req.isAuthenticated) {
+    blogController.getBlog(req, res)
+  }
+})
+
 module.exports = router
