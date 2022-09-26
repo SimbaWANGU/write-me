@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useQuery } from 'react-query'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -64,6 +65,22 @@ export default function BasicTabs() {
   };
 
   const [username, setUsername] = React.useState('')
+  const [blogData, setBlogData] = React.useState([])
+  const [postData, setPostData] = React.useState({})
+
+  useQuery('blogs', () => {
+    fetch('/blog/get', {
+      method: 'get',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+    })
+    .then(res => res.json())
+    .then(b => {
+      console.log(b)
+      setBlogData(b.blogs)
+    })
+  })
 
   React.useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('write-me-user'))
@@ -138,7 +155,18 @@ export default function BasicTabs() {
         <Posts />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Blogs />
+        {blogData.map((blog) => (
+          <Blogs
+            key={blog._id}
+            author={blog.author} 
+            title={blog.title}
+            body={blog.body}
+            likes={blog.likes}
+            comments={blog.comments}
+            created_at={blog.created_at}
+            update_at={blog.update_at}
+          />
+        ))}
       </TabPanel>
       <Modal
         open={postModal}
