@@ -24,7 +24,33 @@ function createBlog(req, res) {
     }
   }
 }
-function getBlog(req, res) {}
+function getBlog(req, res) {
+  Blog.find({}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      res.json({
+        blogs: result,
+        status: 200
+      })
+    }
+  })
+}
+
+//{
+//  id: result._id,
+//  author: result.author,
+//  title: result.title,
+//  text: result.body,
+//  status: result.status,
+//  created_at: result.created_at,
+//  updated_at: result.updated_at,
+//  likes: result.likes,
+//  comments: result.comments
+//}
+
 function updateBlog(req, res) {}
 function deleteBlog(req, res) {}
 
