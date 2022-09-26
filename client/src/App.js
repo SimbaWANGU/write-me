@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import LoginRegister from "./pages/loginRegister";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from "./components/Navbar";
@@ -19,6 +21,7 @@ function Authorized() {
 }
 
 function App() {
+  const queryClient = new QueryClient()
   const [user, setUser] = useState({})
   const [message, setMessage] = useState('')
 
@@ -36,7 +39,7 @@ function App() {
   }
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       {(Object.keys(user).length === 0) ? 
         <LoginRegister 
           updateMessage={updateMessage}
@@ -44,8 +47,9 @@ function App() {
         <Authorized
           updateMessage={updateMessage}
         />  
-    }
-    </>
+      }
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 
