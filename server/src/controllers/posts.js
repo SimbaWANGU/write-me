@@ -1,18 +1,15 @@
 const Post = require('../models/post')
 
 function createPost(req, res) {
-  const personInfo = req.body
-  if(!personInfo.text || !personInfo.author) {
-    console.log(personInfo)
+  const postInfo = req.body
+  if(!postInfo.text || !postInfo.author) {
     res.json({
       error: 'No text available',
-      username: req.body.author,
-      text: req.body.text
     })
   } else {
     const newPost = new Post({
-      body: personInfo.text,
-      author: personInfo.author,
+      body: postInfo.text,
+      author: postInfo.author,
     })
     if(newPost.save()) {
       res.json({
