@@ -23,7 +23,6 @@ router.post("/auth/register", async (req, res) => {
           username: req.body.username,
           message: 'You have created an account',
           status: 200,
-          session: req.session.passport.user
         })
       })
     } else {
@@ -47,12 +46,10 @@ router.post("/auth/login", (req, res) => {
       console.log(err)
     } else {
       passport.authenticate('local')(req, res, function() {
-        console.log(req.session.passport.user)
         res.json({
           username: req.body.username,
           message: 'You have access',
           status: 200,
-          session: req.session.passport.user
         })
       })
     }
@@ -66,30 +63,6 @@ router.get("/auth/logout", (req, res) => {
       lmao: 'You\'re not in'
     })
   });
-})
-
-router.get('/', (req, res) => {
-  if(req.isAuthenticated()) {
-    res.json({
-      lmao: 'You\'re in'
-    })
-  } else {
-    res.json({
-      lmao: 'lmao bro, try again'
-    })
-  }
-})
-
-router.get('/login', (req, res) => {
-  res.json({
-    lmao: 'You\'re not in'
-  })
-})
-
-router.get('/register', (req, res) => {
-  res.json({
-    lmao: 'You\'re not in'
-  })
 })
 
 module.exports = router
