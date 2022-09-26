@@ -63,6 +63,14 @@ export default function BasicTabs() {
     p: 4,
   };
 
+  const [username, setUsername] = React.useState('')
+
+  React.useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem('write-me-user'))
+    setUsername(loggedInUser.username)
+    console.log(loggedInUser)
+  }, [])
+
   const [postModal, setPostModal] = React.useState(false)
   const handleOpenPostModal = () => setPostModal(true)
   const handleClosePostModal = () => setPostModal(false)
@@ -75,9 +83,18 @@ export default function BasicTabs() {
   const [blogText, setBlogText] = React.useState('')
   const [blogStatus, setBlogStatus] = React.useState('public')
 
-  const handlePostSubmit = (e) => {
+  const handlePostSubmit = async (e) => {
     e.preventDefault()
-    console.log(postText) //post fetch method here
+    await fetch('/post/create', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      body: `text=${postText}&author=${username}`
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+
     setPostText('')
     handleClosePostModal()
   }
