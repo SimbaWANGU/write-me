@@ -14,6 +14,10 @@ router.post('/create', (req, res) => {
 router.get('/get', (req, res) => {
   if(req.isAuthenticated) {
     blogController.getBlog(req, res)
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
   }
 })
 

@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const postController = require('../controllers/posts')
 
-router.get('/posts', (req, res) => {
+
+router.post('/create', (req, res) => {
   if(req.isAuthenticated) {
-    postController.getPost(req, res)
+    postController.createPost(req, res)
   } else {
     res.json({
       error: 'You need to login'
@@ -11,9 +12,9 @@ router.get('/posts', (req, res) => {
   }
 })
 
-router.post('/create', (req, res) => {
+router.get('/get', (req, res) => {
   if(req.isAuthenticated) {
-    postController.createPost(req, res)
+    postController.getPost(req, res)
   } else {
     res.json({
       error: 'You need to login'
