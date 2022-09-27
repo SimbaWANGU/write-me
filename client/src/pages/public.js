@@ -47,6 +47,13 @@ function a11yProps(index) {
 
 export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
+  const [username, setUsername] = React.useState('')
+  const [postText, setPostText] = React.useState('')
+  const [postModal, setPostModal] = React.useState(false)
+  const [blogModal, setBlogModal] = React.useState(false)
+  const [blogTitle, setBlogTitle] = React.useState('')
+  const [blogText, setBlogText] = React.useState('')
+  const [blogStatus, setBlogStatus] = React.useState('public')
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -64,23 +71,30 @@ export default function BasicTabs() {
     p: 4,
   };
 
-  const [username, setUsername] = React.useState('')
-  const [blogData, setBlogData] = React.useState([])
-  const [postData, setPostData] = React.useState({})
 
-  useQuery('blogs', () => {
-    fetch('/blog/get', {
+  const fetchBlogData = async () => {
+    const res = await fetch('/blog/get', {
       method: 'get',
       headers: {
         "Content-type": "application/x-www-form-urlencoded"
       },
     })
-    .then(res => res.json())
-    .then(b => {
-      console.log(b)
-      setBlogData(b.blogs)
+    const result = await res.json()
+    return result
+  }
+
+  const fetchPostData = async () => {
+    const res = await fetch('/post/get', {
+      method: 'get',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
     })
-  })
+    const result = await res.json()
+    return result
+  }
+
+  const {isLoading, data, isError, error } = useQuery('blogs', fetchBlogData)
 
   React.useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('write-me-user'))
@@ -88,19 +102,12 @@ export default function BasicTabs() {
     console.log(loggedInUser)
   }, [])
 
-  const [postModal, setPostModal] = React.useState(false)
   const handleOpenPostModal = () => setPostModal(true)
   const handleClosePostModal = () => setPostModal(false)
 
-  const [blogModal, setBlogModal] = React.useState(false)
   const handleOpenBlogModal = () => setBlogModal(true)
   const handleCloseBlogModal = () => setBlogModal(false)
 
-  const [postText, setPostText] = React.useState('')
-
-  const [blogTitle, setBlogTitle] = React.useState('')
-  const [blogText, setBlogText] = React.useState('')
-  const [blogStatus, setBlogStatus] = React.useState('public')
 
   const handlePostSubmit = async (e) => {
     e.preventDefault()
@@ -134,6 +141,14 @@ export default function BasicTabs() {
     handleCloseBlogModal()
   }
 
+  if(isLoading) {
+    return <h2>Loading</h2>
+  }
+
+  if(isError) {
+    return <h2>{error.message}</h2>
+  }
+
   return (
     <Box sx={{ width: '70%', margin: 'auto' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -155,7 +170,7 @@ export default function BasicTabs() {
         <Posts />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {blogData.map((blog) => (
+        {data?.blogs.map((blog) => (
           <Blogs
             key={blog._id}
             author={blog.author} 
