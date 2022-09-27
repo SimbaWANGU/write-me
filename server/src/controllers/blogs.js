@@ -24,6 +24,7 @@ function createBlog(req, res) {
     }
   }
 }
+
 function getBlog(req, res) {
   Blog.find({}, function(err, result) {
     if(err) {

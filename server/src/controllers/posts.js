@@ -23,7 +23,20 @@ function createPost(req, res) {
   }
 }
 
-function getPost(req, res) {}
+function getPost(req, res) {
+  Post.find({}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      res.json({
+        posts: result,
+        status: 200
+      })
+    }
+  })
+}
 
 function deletePost(req, res) {}
 
