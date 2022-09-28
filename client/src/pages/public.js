@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -151,23 +151,33 @@ export default function BasicTabs() {
   }
 
   const useAddPostData = () => {
-    return useMutation(addPost)
+    const queryClient = useQueryClient()
+    return useMutation(addPost, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('posts')
+      },
+    })
   }
 
   const useAddBlogData = () => {
-    return useMutation(addBlog)
+    const queryClient = useQueryClient()
+    return useMutation(addBlog, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('blogs')
+      }
+    })
   }
 
   const { mutate: addPostToDb } = useAddPostData()
   const { mutate: addBlogToDb } = useAddBlogData()
 
-  const handlePostSubmit = async (e) => {
+  const handlePostSubmit = (e) => {
     e.preventDefault()
     const post = {postText, username}
     addPostToDb(post)
   }
 
-  const handleBlogSubmit = async (e) => {
+  const handleBlogSubmit = (e) => {
     e.preventDefault()
     const blog = {blogTitle, blogText, blogStatus, username}
     addBlogToDb(blog)
