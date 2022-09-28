@@ -53,8 +53,7 @@ function likePost(req, res) {
     function (err, docs) {
     if (err){
         console.log(err);
-    }
-    else{
+    } else {
         res.json({
           success: 'post was liked'
         })
@@ -62,6 +61,33 @@ function likePost(req, res) {
   });
 }
 
+function getLikes(req, res) {
+  console.log(req.params)
+  const id = req.params.id
+  Post.findById(id, 'likes', function (err, docs) {
+    if(err) {
+        res.json({
+          error: err
+        })
+    } else {
+        res.json(docs)
+    }
+  })
+}
+
+function getComments(req, res) {
+  const id = req.params.id
+  Post.findById(id, 'comments', function (err, docs) {
+    if (err){
+        res.json({
+          error: err
+        })
+    } else {
+        res.send(docs)
+    }
+  })
+}
+
 module.exports = {
-  createPost, getPost, deletePost, updatePost, likePost
+  createPost, getPost, deletePost, updatePost, likePost, getLikes, getComments
 }
