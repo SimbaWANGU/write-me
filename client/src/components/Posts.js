@@ -4,11 +4,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-function Posts() {
-  let text = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. '
-  let commentCounter = 30
-  let likes = 40
-  let person = 'SimbaWANGU'
+function Posts(props) {
   let image = ''
   let pi = (image === '') ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : image;
 
@@ -16,12 +12,12 @@ function Posts() {
     <div className='post'>
       <div className='userDetails'>
         <img src={pi} alt="profile pic" />
-        <p>{person}</p>
+        <p>#{props.author}</p>
       </div>
-      {text}
+        {props.body}
       <div className='post_icons'>
-        {commentCounter} <CommentIcon className='icon' color='primary' />
-        {likes}<FavoriteIcon className='icon' color='error' />
+        {props.comments.length} <CommentIcon className='icon' color='primary' />
+        {props.likes.length}<FavoriteIcon className='icon' color='error' />
       </div>
     </div>
   )
