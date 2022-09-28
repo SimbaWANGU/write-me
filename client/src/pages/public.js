@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -94,12 +94,23 @@ export default function BasicTabs() {
     return result
   }
 
-  const {isLoading, data, isError, error } = useQuery('blogs', fetchBlogData)
+  const { 
+    isLoading: blogDataLoading,
+    data: blogData, 
+    isError: blogDataError, 
+    error: errorBlogMessage 
+  } = useQuery('blogs', fetchBlogData)
+
+  const { 
+    isLoading: postDataLoading,
+    data: postData, 
+    isError: postDataError, 
+    error: errorPostMessage 
+  } = useQuery('posts', fetchPostData)
 
   React.useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem('write-me-user'))
     setUsername(loggedInUser.username)
-    console.log(loggedInUser)
   }, [])
 
   const handleOpenPostModal = () => setPostModal(true)
@@ -108,9 +119,7 @@ export default function BasicTabs() {
   const handleOpenBlogModal = () => setBlogModal(true)
   const handleCloseBlogModal = () => setBlogModal(false)
 
-
-  const handlePostSubmit = async (e) => {
-    e.preventDefault()
+  const addPost = async () => {
     await fetch('/post/create', {
       method: 'post',
       headers: {
@@ -125,8 +134,7 @@ export default function BasicTabs() {
     handleClosePostModal()
   }
 
-  const handleBlogSubmit = async (e) => {
-    e.preventDefault()
+  const addBlog = async () => {
     await fetch('/blog/create', {
       method: 'post',
       headers: {
@@ -136,17 +144,37 @@ export default function BasicTabs() {
     })
     .then(res => res.json())
     .then((data) => console.log(data))
+
     setBlogText('')
     setBlogTitle('')
     handleCloseBlogModal()
   }
 
-  if(isLoading) {
-    return <h2>Loading</h2>
+  const useAddPostData = () => {
+    return useMutation(addPost)
   }
 
-  if(isError) {
-    return <h2>{error.message}</h2>
+  const useAddBlogData = () => {
+    return useMutation(addBlog)
+  }
+
+  const { mutate: addPostToDb } = useAddPostData()
+  const { mutate: addBlogToDb } = useAddBlogData()
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault()
+    const post = {postText, username}
+    addPostToDb(post)
+  }
+
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault()
+    const blog = {blogTitle, blogText, blogStatus, username}
+    addBlogToDb(blog)
+  }
+
+  if(blogDataError || postDataError) {
+    return <h2>{errorBlogMessage.message}{errorPostMessage.message}</h2>
   }
 
   return (
@@ -166,13 +194,30 @@ export default function BasicTabs() {
         </button>
       </div>
       <TabPanel value={value} index={0}>
-        <Posts />
-        <Posts />
+        {postDataLoading ? 
+          <h2>LOading</h2> : //add loading component
+          postData?.posts.map((post) => (
+          <Posts
+            key={post._id}
+            id={post._id}
+            author={post.author} 
+            title={post.title}
+            body={post.body}
+            likes={post.likes}
+            comments={post.comments}
+            created_at={post.created_at}
+            update_at={post.update_at}
+          />
+        ))}
+        {}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {data?.blogs.map((blog) => (
+        {blogDataLoading ? 
+          <h2>LOading</h2> : //add loading component
+          blogData?.blogs.map((blog) => (
           <Blogs
             key={blog._id}
+            id={blog._id}
             author={blog.author} 
             title={blog.title}
             body={blog.body}
@@ -252,3 +297,4 @@ export default function BasicTabs() {
     </Box>
   );
 }
+
