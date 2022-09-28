@@ -25,4 +25,14 @@ router.get('/get', (req, res) => {
 router.post('/update_post', (req, res) => {})
 router.delete('/delete_post', (req, res) => {})
 
+router.post('/like', (req, res) => {
+  if (req.isAuthenticated) {
+    postController.likePost(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
 module.exports = router

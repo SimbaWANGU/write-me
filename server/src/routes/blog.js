@@ -21,4 +21,14 @@ router.get('/get', (req, res) => {
   }
 })
 
+router.post('/like', (req, res) => {
+  if (req.isAuthenticated) {
+    postController.likeBlog(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
 module.exports = router
