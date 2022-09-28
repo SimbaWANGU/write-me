@@ -42,6 +42,26 @@ function deletePost(req, res) {}
 
 function updatePost(req, res) {}
 
+function likePost(req, res) {
+  const postId = req.body.id
+  const username = req.body.username
+  
+  Post.findByIdAndUpdate(
+    postId,
+    {$push: {'likes': username}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+    if (err){
+        console.log(err);
+    }
+    else{
+        res.json({
+          success: 'post was liked'
+        })
+    }
+  });
+}
+
 module.exports = {
-  createPost, getPost, deletePost, updatePost
+  createPost, getPost, deletePost, updatePost, likePost
 }

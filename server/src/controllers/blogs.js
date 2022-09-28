@@ -40,20 +40,28 @@ function getBlog(req, res) {
   })
 }
 
-//{
-//  id: result._id,
-//  author: result.author,
-//  title: result.title,
-//  text: result.body,
-//  status: result.status,
-//  created_at: result.created_at,
-//  updated_at: result.updated_at,
-//  likes: result.likes,
-//  comments: result.comments
-//}
-
 function updateBlog(req, res) {}
 function deleteBlog(req, res) {}
+
+function likeBlog(req, res) {
+  const blogId = req.body.id
+  const username = req.body.username
+  
+  Blog.findByIdAndUpdate(
+    blogId,
+    {$push: {'likes': username}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+    if (err){
+        console.log(err);
+    }
+    else{
+        res.json({
+          success: 'blog was liked'
+        })
+    }
+  });
+}
 
 module.exports = {
   createBlog, getBlog, deleteBlog, updateBlog
