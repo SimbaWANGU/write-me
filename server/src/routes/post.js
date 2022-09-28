@@ -35,4 +35,24 @@ router.post('/like', (req, res) => {
   }
 })
 
+router.get('/:id/likes', (req, res) => {
+  if (req.isAuthenticated) {
+    postController.getLikes(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+router.get('/:id/comments', (req, res) => {
+  if (req.isAuthenticated) {
+    postController.getComments(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
+
 module.exports = router
