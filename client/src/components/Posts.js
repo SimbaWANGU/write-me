@@ -49,7 +49,17 @@ function Posts(props) {
     .then((data) => console.log(data))
   }
 
-  const unlikePost = async () => {}
+  const unlikePost = async () => {
+    await fetch('/post/unlike', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      body: `username=${username}&id=${props.id}`
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+  }
 
   const useAddLikeData = () => {
     const queryClient = useQueryClient()
@@ -60,7 +70,17 @@ function Posts(props) {
     })
   }
 
+  const useRemoveLikeData = () => {
+    const queryClient = useQueryClient()
+    return useMutation(unlikePost, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`likes${props.id}`)
+      }
+    })
+  }
+
   const { mutate: addLikeToDb } = useAddLikeData()
+  const { mutate: removeLikeFromDb } = useRemoveLikeData()
   const {data: likesData} = useQuery(`likes${props.id}`, getLikes)
   const {data: commentsData} = useQuery(`comments${props.id}`, getComments)
 
@@ -72,10 +92,18 @@ function Posts(props) {
     addLikeToDb(like)
   }
 
+  const handleUnlike = () => {
+    const like = {
+      username,
+      id: props.id
+    }
+    removeLikeFromDb(like)
+  }
+
   const LikeButton = () => {
     if(likesData) {
       if (likesData.likes.includes(username)) {
-        return <FavoriteIcon className='icon' color='error' />
+        return <FavoriteIcon className='icon' color='error' onClick={handleUnlike} />
       } else {
         return <FavoriteBorderIcon className='icon' onClick={handleLike} />
       }
