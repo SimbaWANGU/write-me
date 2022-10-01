@@ -51,18 +51,38 @@ function likePost(req, res) {
     {$push: {'likes': username}},
     {safe: true, upsert: true, new: true},
     function (err, docs) {
-    if (err){
+      if (err){
         console.log(err);
-    } else {
+      } else {
         res.json({
           success: 'post was liked'
         })
+      }
     }
-  });
+  );
+}
+
+function unlikePost(req, res) {
+  const postId = req.body.id
+  const username = req.body.username
+  
+  Post.findByIdAndUpdate(
+    postId,
+    {$pull: {'likes': username}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+      if (err){
+        console.log(err);
+      } else {
+        res.json({
+          success: 'post was liked'
+        })
+      }
+    }
+  );
 }
 
 function getLikes(req, res) {
-  console.log(req.params)
   const id = req.params.id
   Post.findById(id, 'likes', function (err, docs) {
     if(err) {
@@ -89,5 +109,5 @@ function getComments(req, res) {
 }
 
 module.exports = {
-  createPost, getPost, deletePost, updatePost, likePost, getLikes, getComments
+  createPost, getPost, deletePost, updatePost, likePost, unlikePost, getLikes, getComments
 }
