@@ -35,6 +35,16 @@ router.post('/like', (req, res) => {
   }
 })
 
+router.post('/unlike', (req, res) => {
+  if (req.isAuthenticated) {
+    postController.unlikePost(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
 router.get('/:id/likes', (req, res) => {
   if (req.isAuthenticated) {
     postController.getLikes(req, res) 
@@ -44,6 +54,7 @@ router.get('/:id/likes', (req, res) => {
     })
   }
 })
+
 router.get('/:id/comments', (req, res) => {
   if (req.isAuthenticated) {
     postController.getComments(req, res) 
