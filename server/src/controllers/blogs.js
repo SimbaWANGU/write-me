@@ -24,10 +24,91 @@ function createBlog(req, res) {
     }
   }
 }
-function getBlog(req, res) {}
+
+function getBlog(req, res) {
+  Blog.find({}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      res.json({
+        blogs: result,
+        status: 200
+      })
+    }
+  })
+}
+
 function updateBlog(req, res) {}
 function deleteBlog(req, res) {}
 
+function likeBlog(req, res) {
+  const blogId = req.body.id
+  const username = req.body.username
+  
+  Blog.findByIdAndUpdate(
+    blogId,
+    {$push: {'likes': username}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+      if (err){
+        console.log(err);
+      } else {
+        res.json({
+          success: 'blog was liked'
+        })
+      }
+    }
+  );
+}
+
+function unlikeBlog(req, res) {
+  const blogId = req.body.id
+  const username = req.body.username
+  
+  Blog.findByIdAndUpdate(
+    blogId,
+    {$pull: {'likes': username}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+      if (err){
+        console.log(err);
+      } else {
+        res.json({
+          success: 'blog was liked'
+        })
+      }
+    }
+  );
+}
+
+function getLikes(req, res) {
+  const id = req.params.id
+  Blog.findById(id, 'likes', function (err, docs) {
+    if(err) {
+        res.json({
+          error: err
+        })
+    } else {
+        res.json(docs)
+    }
+  })
+}
+
+function getComments(req, res) {
+  const id = req.params.id
+  Blog.findById(id, 'comments', function (err, docs) {
+    if (err){
+        res.json({
+          error: err
+        })
+    } else {
+        res.send(docs)
+    }
+  })
+}
+
 module.exports = {
-  createBlog, getBlog, deleteBlog, updateBlog
+  createBlog, getBlog, deleteBlog, updateBlog, likeBlog, unlikeBlog, getLikes, getComments
 }
