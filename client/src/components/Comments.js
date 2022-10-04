@@ -18,21 +18,6 @@ function Comments(props) {
     p: 4,
   };
 
-  const comments = [
-    {
-      author: 'Mustard',
-      comment: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur reiciendis adipisci voluptatibus ex! Illo repudiandae nihil magni ratione molestiae reprehenderit ab impedit asperiores consequatur amet perspiciatis quo debitis, ut minima sequi tempora cupiditate quod quae at nam. Suscipit explicabo saepe sed minima repudiandae vitae praesentium iure incidunt, architecto perferendis fugit.',
-    },
-    {
-      author: 'Mustard',
-      comment: 'Lmao'
-    },
-    {
-      author: 'Mustard',
-      comment: 'Lmao'
-    }
-  ]
-
   const [comment, setComment] = useState('')
 
   const addComment = async () => {
@@ -88,10 +73,10 @@ function Comments(props) {
           </button>
         </form>
       </div>
-      {comments?.map((comment) => (
+      {props.comments.comments?.map((comment) => (
         <div className='commentsArea'>
           <img src={props.image} alt='pp' />
-          <p className='author'><strong>{comment.author}</strong></p>
+          <p className='author'><strong>{comment.username}</strong></p>
           <p className='comment'>{comment.comment}</p>
         </div>
       ))}
