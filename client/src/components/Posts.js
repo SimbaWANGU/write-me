@@ -5,7 +5,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { Modal } from '@mui/material';
-import Comments from './Comments';
+import Comments from './PostComments';
 
 function Posts(props) {
   const [username, setUsername] = useState('')
@@ -120,7 +120,7 @@ function Posts(props) {
     <div className='post'>
       <div className='userDetails'>
         <img src={pi} alt="profile pic" />
-        <p>#{props.author}</p>
+        <p>#<strong>{props.author}</strong></p>
       </div>
         {props.body}
       <div className='post_icons'>
