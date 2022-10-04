@@ -108,6 +108,37 @@ function getComments(req, res) {
   })
 }
 
+function addComment(req, res) {
+  const postId = req.params.id
+  const newComment = {
+    comment: req.body.comment,
+    username: req.body.author
+  }
+  
+  Post.findByIdAndUpdate(
+    postId,
+    {$push: {'comments': newComment}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+      if (err){
+        console.log(err);
+      } else {
+        res.json({
+          success: 'comment was added'
+        })
+      }
+    }
+  );
+}
+
 module.exports = {
-  createPost, getPost, deletePost, updatePost, likePost, unlikePost, getLikes, getComments
+  createPost,
+  getPost,
+  deletePost,
+  updatePost,
+  likePost,
+  unlikePost,
+  getLikes,
+  getComments,
+  addComment
 }
