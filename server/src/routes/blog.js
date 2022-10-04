@@ -61,4 +61,14 @@ router.get('/:id/comments', (req, res) => {
   }
 })
 
+router.post('/:id/comment', (req, res) => {
+  if (req.isAuthenticated) {
+    blogController.addComment(req, res) 
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
 module.exports = router
