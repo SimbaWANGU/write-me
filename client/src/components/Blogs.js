@@ -4,9 +4,12 @@ import '../styles/Blogs.scss'
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Modal } from '@mui/material';
+import Comments from './BlogComments';
 
 function Blogs(props) {
   const [username, setUsername] = useState('')
+  const [postCommentsModal, setPostCommentsModal] = useState(false)
   let image = ''
   let pi = (image === '') ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : image;
 
@@ -110,6 +113,8 @@ function Blogs(props) {
     }
   }
 
+  const openPost = () => setPostCommentsModal(true)
+  const closePost = () => setPostCommentsModal(false)
   
   return (
     <div className='blog_post'>
@@ -120,9 +125,25 @@ function Blogs(props) {
       </div>
       {props.body}
       <div className='blog_icons'>
-      {(commentsData) ? commentsData.comments.length : 0} <CommentIcon className='icon' color='primary' />
+      {(commentsData) ? commentsData.comments.length : 0} <CommentIcon className='icon' color='primary' onClick={openPost} />
       {(likesData) ? likesData.likes.length : 0} <LikeButton />
       </div>
+      <Modal
+        open={postCommentsModal}
+        onClose={closePost}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Comments 
+          id={props.id}
+          title={props.title}
+          text={props.body}
+          author={props.author}
+          image={pi}
+          username={username}
+          comments={commentsData}
+        />
+      </Modal>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+
 const Blog = require('../models/blog')
 
 function createBlog(req, res) {
@@ -109,6 +110,37 @@ function getComments(req, res) {
   })
 }
 
+function addComment(req, res) {
+  const blogId = req.params.id
+  const newComment = {
+    comment: req.body.comment,
+    username: req.body.author
+  }
+  
+  Blog.findByIdAndUpdate(
+    blogId,
+    {$push: {'comments': newComment}},
+    {safe: true, upsert: true, new: true},
+    function (err, docs) {
+      if (err){
+        console.log(err);
+      } else {
+        res.json({
+          success: 'comment was added'
+        })
+      }
+    }
+  );
+}
+
 module.exports = {
-  createBlog, getBlog, deleteBlog, updateBlog, likeBlog, unlikeBlog, getLikes, getComments
+  createBlog,
+  getBlog,
+  deleteBlog,
+  updateBlog,
+  likeBlog,
+  unlikeBlog,
+  getLikes,
+  getComments,
+  addComment,
 }
