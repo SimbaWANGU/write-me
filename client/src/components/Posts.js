@@ -4,9 +4,12 @@ import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { Modal } from '@mui/material';
+import Comments from './Comments';
 
 function Posts(props) {
   const [username, setUsername] = useState('')
+  const [postCommentsModal, setPostCommentsModal] = useState(false)
   let image = ''
   let pi = (image === '') ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : image;
 
@@ -110,6 +113,9 @@ function Posts(props) {
     }
   }
 
+  const openPost = () => setPostCommentsModal(true)
+  const closePost = () => setPostCommentsModal(false)
+
   return (
     <div className='post'>
       <div className='userDetails'>
@@ -118,9 +124,24 @@ function Posts(props) {
       </div>
         {props.body}
       <div className='post_icons'>
-        {(commentsData) ? commentsData.comments.length : 0} <CommentIcon className='icon' color='primary' />
+        {(commentsData) ? commentsData.comments.length : 0} <CommentIcon className='icon' color='primary' onClick={openPost} />
         {(likesData) ? likesData.likes.length : 0} <LikeButton />
       </div>
+      <Modal
+        open={postCommentsModal}
+        onClose={closePost}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Comments 
+          id={props.id}
+          text={props.body}
+          author={props.author}
+          image={pi}
+          username={username}
+          comments={commentsData}
+        />
+      </Modal>
     </div>
   )
 }
