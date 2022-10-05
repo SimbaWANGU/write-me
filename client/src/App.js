@@ -7,10 +7,10 @@ import Navbar from "./components/Navbar";
 import PublicPosts from "./pages/public";
 import Profile from "./pages/profile";
 
-function Authorized() {
+function Authorized({updateMessage}) {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar updateMessage={updateMessage}/>
       <Routes>
         <Route path="/" element={<PublicPosts />} />
         <Route path="/profile" element={<Profile />} />

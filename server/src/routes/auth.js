@@ -60,7 +60,7 @@ router.get("/auth/logout", (req, res) => {
   req.logout(function(err) {
     if (err) { return next(err); }
     res.json({
-      lmao: 'You\'re not in'
+      message: ''
     })
   });
 })
