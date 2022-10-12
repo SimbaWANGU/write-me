@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const postController = require('../controllers/posts')
 
-
 router.post('/create', (req, res) => {
   if(req.isAuthenticated) {
     postController.createPost(req, res)
@@ -15,6 +14,16 @@ router.post('/create', (req, res) => {
 router.get('/get', (req, res) => {
   if(req.isAuthenticated) {
     postController.getPost(req, res)
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
+router.get('/count/:author', (req, res) => {
+  if(req.isAuthenticated) {
+    postController.getPostCount(req, res)
   } else {
     res.json({
       error: 'You need to login'

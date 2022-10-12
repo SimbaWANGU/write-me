@@ -21,6 +21,26 @@ router.get('/get', (req, res) => {
   }
 })
 
+router.get('/count/:author', (req, res) => {
+  if(req.isAuthenticated) {
+    blogController.getBlogCount(req, res)
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
+router.get('/private/count/:author', (req, res) => {
+  if(req.isAuthenticated) {
+    blogController.getPrivateBlogCount(req, res)
+  } else {
+    res.json({
+      error: 'You need to login'
+    })
+  }
+})
+
 router.post('/like', (req, res) => {
   if (req.isAuthenticated) {
     blogController.likeBlog(req, res) 
