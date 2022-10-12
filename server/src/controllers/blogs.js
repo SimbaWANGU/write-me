@@ -27,7 +27,7 @@ function createBlog(req, res) {
 }
 
 function getBlog(req, res) {
-  Blog.find({}, function(err, result) {
+  Blog.find({ status: 'public'}, function(err, result) {
     if(err) {
       res.json({
         error: err
@@ -35,6 +35,39 @@ function getBlog(req, res) {
     } else {
       res.json({
         blogs: result,
+        status: 200
+      })
+    }
+  }).sort({createdAt: -1})
+}
+
+function getBlogCount(req, res) {
+  console.log('I\'m called')
+  Blog.find({ status: 'public'}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      res.json({
+        length: result.length,
+        status: 200
+      })
+    }
+  })
+}
+
+function getPrivateBlogCount(req, res) {
+  console.log('I\'m called')
+  Blog.find({ status: 'private'}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      console.log(result.length)
+      res.json({
+        length: result.length,
         status: 200
       })
     }
@@ -136,6 +169,8 @@ function addComment(req, res) {
 module.exports = {
   createBlog,
   getBlog,
+  getBlogCount,
+  getPrivateBlogCount,
   deleteBlog,
   updateBlog,
   likeBlog,

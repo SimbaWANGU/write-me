@@ -1,20 +1,9 @@
 const mongoose = require('mongoose');
 
-const d = Date(Date.now())
-const a = d.toString()
-
 const postSchema = new mongoose.Schema({
   body: {
     require: true,
     type: String
-  },
-  created_at: {
-    type: String,
-    default: a
-  },
-  updated_at: {
-    type: String,
-    default: a
   },
   author: {
     require: true,
@@ -28,6 +17,6 @@ const postSchema = new mongoose.Schema({
     type: Array,
     default: []
   }
-})
+}, {timestamps: true})
 
 module.exports = mongoose.model('Post', postSchema)

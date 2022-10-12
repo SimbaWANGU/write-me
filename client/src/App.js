@@ -7,13 +7,13 @@ import Navbar from "./components/Navbar";
 import PublicPosts from "./pages/public";
 import Profile from "./pages/profile";
 
-function Authorized() {
+function Authorized({updateMessage, user}) {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar updateMessage={updateMessage}/>
       <Routes>
         <Route path="/" element={<PublicPosts />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile user={user}/>} />
         <Route path='/login' element={<LoginRegister />} />
       </Routes>
     </BrowserRouter>
@@ -46,6 +46,7 @@ function App() {
         /> :
         <Authorized
           updateMessage={updateMessage}
+          user={user}
         />  
       }
       <ReactQueryDevtools initialIsOpen={false} />

@@ -35,6 +35,22 @@ function getPost(req, res) {
         status: 200
       })
     }
+  }).sort({createdAt: -1})
+}
+
+function getPostCount(req, res) {
+  const name = req.params.author
+  Post.find({author: name}, function(err, result) {
+    if(err) {
+      res.json({
+        error: err
+      })
+    } else {
+      res.json({
+        length: result.length,
+        status: 200
+      })
+    }
   })
 }
 
@@ -134,6 +150,7 @@ function addComment(req, res) {
 module.exports = {
   createPost,
   getPost,
+  getPostCount,
   deletePost,
   updatePost,
   likePost,
